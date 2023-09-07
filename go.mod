@@ -16,7 +16,6 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.1
 	github.com/vincent-petithory/dataurl v0.0.0-20160330182126-9a301d65acbb
-	k8s.io/api v0.24.9
 	k8s.io/apimachinery v0.24.9
 	k8s.io/client-go v0.24.9
 	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9
@@ -225,6 +224,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/tools v0.3.3 // indirect
+	k8s.io/api v0.24.9 // indirect
 	k8s.io/apiextensions-apiserver v0.24.2 // indirect
 	k8s.io/component-base v0.24.2 // indirect
 	k8s.io/klog/v2 v2.60.1 // indirect
@@ -238,7 +238,7 @@ require (
 )
 
 replace (
-	github.com/metal3-io/baremetal-operator => github.com/openshift/baremetal-operator v0.0.0-20220217140404-6b1ecb71984f
-	github.com/metal3-io/baremetal-operator/apis => github.com/openshift/baremetal-operator/apis v0.0.0-20220217140404-6b1ecb71984f
-	github.com/metal3-io/baremetal-operator/pkg/hardwareutils => github.com/openshift/baremetal-operator/pkg/hardwareutils v0.0.0-20220217140404-6b1ecb71984f
+	github.com/metal3-io/baremetal-operator => github.com/openshift/baremetal-operator v0.0.0-20230824090041-d75786e0f23c
+	github.com/metal3-io/baremetal-operator/apis => github.com/openshift/baremetal-operator/apis v0.0.0-20230824090041-d75786e0f23c
+	github.com/metal3-io/baremetal-operator/pkg/hardwareutils => github.com/openshift/baremetal-operator/pkg/hardwareutils v0.0.0-20230824090041-d75786e0f23c
 )

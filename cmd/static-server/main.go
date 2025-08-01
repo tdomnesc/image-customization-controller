@@ -106,7 +106,7 @@ func loadStaticNMState(fsys fs.FS, env *env.EnvInputs, nmstateDir string, imageS
 			imageName := strings.TrimSuffix(f.Name(), ".yaml") + suffix
 
 			isInitramfs := !strings.HasSuffix(imageName, ".iso")
-			url, err := imageServer.ServeImage(imageName, ign, isInitramfs, true)
+			url, err := imageServer.ServeImage(imageName, "", ign, isInitramfs, true)
 			if err != nil {
 				return err
 			}
@@ -134,7 +134,7 @@ func main() {
 
 	version.Print(log)
 
-	env, err := env.New()
+	envInputs, err := env.New()
 	if err != nil {
 		log.Error(err, "environment not provided")
 		os.Exit(1)
@@ -151,10 +151,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	imageServer := imagehandler.NewImageHandler(ctrl.Log.WithName("ImageHandler"), env.DeployISO, env.DeployInitrd, publishURL)
+	imageServer, err := imagehandler.NewImageHandler(ctrl.Log.WithName("ImageHandler"), publishURL, envInputs)
+	if err != nil {
+		log.Error(err, "failed to initialized image handler")
+		os.Exit(1)
+	}
 	http.Handle("/", http.FileServer(imageServer.FileSystem()))
 
-	if err := loadStaticNMState(os.DirFS("/"), env, nmstateDir, imageServer); err != nil {
+	if err := loadStaticNMState(os.DirFS("/"), envInputs, nmstateDir, imageServer); err != nil {
 		log.Error(err, "problem loading static ignitions")
 		os.Exit(1)
 	}

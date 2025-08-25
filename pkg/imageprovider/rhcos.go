@@ -3,7 +3,6 @@ package imageprovider
 import (
 	"errors"
 	"fmt"
-	"runtime"
 	"strings"
 
 	"github.com/go-logr/logr"
@@ -19,7 +18,6 @@ type rhcosImageProvider struct {
 	ImageHandler   imagehandler.ImageHandler
 	EnvInputs      *env.EnvInputs
 	RegistriesConf []byte
-	Architecture   string
 }
 
 func NewRHCOSImageProvider(imageServer imagehandler.ImageHandler, inputs *env.EnvInputs) imageprovider.ImageProvider {
@@ -28,32 +26,15 @@ func NewRHCOSImageProvider(imageServer imagehandler.ImageHandler, inputs *env.En
 		panic(err)
 	}
 
-	architecture := ""
-	switch runtime.GOARCH {
-	case "amd64":
-		architecture = "x86_64"
-	case "arm64":
-		architecture = "aarch64"
-	}
-
 	return &rhcosImageProvider{
 		ImageHandler:   imageServer,
 		EnvInputs:      inputs,
 		RegistriesConf: registries,
-		Architecture:   architecture,
 	}
 }
 
 func (ip *rhcosImageProvider) SupportsArchitecture(arch string) bool {
-	if ip.Architecture == arch {
-		return true
-	}
-
-	if ip.Architecture == "x86_64" && arch == "aarch64" {
-		return true
-	}
-
-	return false
+	return true
 }
 
 func (ip *rhcosImageProvider) SupportsFormat(format metal3.ImageFormat) bool {
@@ -120,7 +101,7 @@ func (ip *rhcosImageProvider) BuildImage(data imageprovider.ImageData, networkDa
 		return generated, err
 	}
 
-	url, err := ip.ImageHandler.ServeImage(imageKey(data), data.Architecture, ignitionConfig,
+	url, err := ip.ImageHandler.ServeImage(imageKey(data), ignitionConfig,
 		data.Format == metal3.ImageFormatInitRD, false)
 	if errors.As(err, &imagehandler.InvalidBaseImageError{}) {
 		return generated, imageprovider.BuildInvalidError(err)

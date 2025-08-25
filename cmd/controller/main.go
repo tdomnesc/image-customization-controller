@@ -169,11 +169,7 @@ func main() {
 		envInputs.IronicAgentPullSecret = string(pullSecretRaw)
 	}
 
-	imageServer, err := imagehandler.NewImageHandler(ctrl.Log.WithName("ImageHandler"), publishURL, envInputs)
-	if err != nil {
-		setupLog.Error(err, "failed to initialized image handler")
-		os.Exit(1)
-	}
+	imageServer := imagehandler.NewImageHandler(ctrl.Log.WithName("ImageHandler"), envInputs.DeployISO, envInputs.DeployInitrd, publishURL)
 	http.Handle("/", http.FileServer(imageServer.FileSystem()))
 
 	go func() {
